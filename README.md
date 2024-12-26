@@ -1,11 +1,11 @@
 # Sortify
 ## _Lightweight Tool for Spotify Playlist Management_
 
-Sortify is a Node.js application that runs entirely on the browser.
+Sortify is a Node.js application that runs entirely in the browser.
 
 >I use Spotify a lot and my playlists are a mess. With nearly 3,000 uncategorized tracks in my Liked Songs playlist, I built this application to better utilize this sunken effort.
 
-Note: Sortify uses Bearer Token Authorization and will require a Spotify Developer account to provide the necessary token.
+Note: Sortify uses Bearer Token Authorization and will require a [Spotify Developer account](https://developer.spotify.com/) to provide the necessary token.
 
 __The latest version only supports creating a new playlist and populating it with the current user's 50 last liked songs.__
 
