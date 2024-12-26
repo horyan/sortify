@@ -23,15 +23,14 @@ Sortify uses a number of open source projects to work properly:
 ## Installation
 Sortify requires [Node.js](https://nodejs.org/) to run.
 
-Install the dependencies and devDependencies and start the server.
+Install the dependencies and devDependencies.
 
 ```sh
 cd path/to/sortify
-npm i
-npm start
+npm install
 ```
 
-In the root directory, create an .env file and configure sensitive variables
+In the root directory, create an .env file and configure sensitive variables.
 
 ```sh
 API_KEY = "<BEARER TOKEN GOES HERE>"
@@ -39,6 +38,11 @@ URL = "https://api.spotify.com/v1"
 USER_ID = "<USER_ID GOES HERE>"
 HOST = "localhost"
 PORT = "8000"
+```
+
+Start the server.
+```sh
+npm start
 ```
 
 ## License
