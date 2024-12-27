@@ -3,7 +3,7 @@
 
 Sortify is a Node.js application that runs entirely in the browser.
 
->I use Spotify a lot and my playlists are a mess. With nearly 3,000 uncategorized tracks in my Liked Songs playlist, I built this application to better utilize this sunken effort.
+>I use Spotify a lot and my playlists are a mess. With nearly 3,000 uncategorized tracks in my Liked Songs playlist, I built this application to better utilize the sunken effort.
 
 Note: Sortify uses Bearer Token Authorization and will require a [Spotify Developer account](https://developer.spotify.com/) to provide the necessary token.
 
@@ -33,11 +33,10 @@ npm install
 In the root directory, create an .env file and configure sensitive variables.
 
 ```sh
-API_KEY = "<BEARER TOKEN GOES HERE>"
-URL = "https://api.spotify.com/v1"
-USER_ID = "<USER_ID GOES HERE>"
 HOST = "localhost"
 PORT = "8000"
+URL = "https://api.spotify.com/v1"
+API_KEY = "<BEARER TOKEN GOES HERE>"
 ```
 
 Start the server.
