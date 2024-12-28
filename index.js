@@ -19,17 +19,13 @@ server.listen(port, host, () => {
 /* TODO: redirect user to Spotify authn and store tokens */
 
 // MAIN
-let currentOffset = 0;
+let currentOffset = 2713-100;//test
 let songUris = [];
+const [userId, songUrisByTime] = await Promise.all([globalUpdateUserId(), globalUpdateSongUrisByTime()]);
+const playlistId = await globalUpdatePlaylistId();
 
-const userId = await globalUpdateUserId();
-const songUrisByTime = await globalUpdateSongUrisByTime(); //calls getLikedSongs()
-const playlistId = await globalUpdatePlaylistId(); //calls createPlaylist()
-
-/* prepare songUris array for addSongsToPlaylist() POST body */
-for(let key in songUrisByTime) {
-    let val = songUrisByTime[key];
-    songUris.push(val);
+for(let key in songUrisByTime) { //prepare addSongsToPlaylist() POST body */
+  songUris.push(songUrisByTime[key]);
 }
 addSongsToPlaylist();
 
@@ -40,18 +36,30 @@ async function getUserProfile() {
     headers: {"Authorization": `Bearer ${apiKey}`},
     method: "GET"
   })
+
   const json = await response.json();
   return json.id;
-}
+};
 
-/*
-  TODO: getLikedSongs() should loop until 0 remaining liked songs
-    1. verify while condition (if 'response.next' != null)
-      a. update currentOffset += returnedItemCount
-      b. update "added_at":"uris" dict
-      c. return dict
-*/
 async function getLikedSongs() {
+  let songs = {}
+  let json = await getData();
+
+  while (currentOffset < json.total) {
+    for (let i = 0, song; i < json.items.length; i++) {
+      song = json.items[i].track.uri;
+      songs[json.items[i].added_at] = song;
+    }
+
+    currentOffset+=json.items.length;
+    json = await getData();
+  }
+
+  return songs;
+};
+
+/* REFACTOR getData()+getLikedSongs(): if !null, url = json.next */
+async function getData() {
   const url = `${URL}/me/tracks?limit=50&offset=${currentOffset}`;
   try {
     const response = await fetch(url, {
@@ -60,33 +68,26 @@ async function getLikedSongs() {
       },
       method: "GET"
     })
+
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
 
-  const json = await response.json();
-  let songs = {};
-  
-  for (let i = 0, song; i < json.items.length; i++) {
-    song = json.items[i].track.uri;
-    songs[json.items[i].added_at] = song;
-  }
-  
-  return songs
+    return await response.json();
   }
   catch (error) {
     console.error(error);
   }
-}
+};
 
 // UPDATERS
 async function globalUpdateUserId() {
   return await getUserProfile();
-}
+};
 
 async function globalUpdatePlaylistId() {
   return await createPlaylist();
-}
+};
 
 async function globalUpdateSongUrisByTime() {
   return await getLikedSongs();
@@ -101,8 +102,9 @@ async function createPlaylist() {
         "Authorization": `Bearer ${apiKey}`
       },
       method: "POST",
-      body: JSON.stringify({ "name": "Last 50 Liked Songs", "description": "created via API", "public": false})
+      body: JSON.stringify({ "name": `Last 100 Liked Songs`, "description": "created via API", "public": false})
     })
+
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
@@ -113,10 +115,12 @@ async function createPlaylist() {
   catch (error) {
     console.error(error);
   }
-}
+};
 
+/* TODO: ability to add > 100 songs, maybe loop i=i+100 and increment position */
 async function addSongsToPlaylist() {
   const url = `${URL}/playlists/${playlistId}/tracks`;
+  await getLikedSongs();
   try {
     const response = await fetch(url, {
       headers: {
@@ -125,6 +129,7 @@ async function addSongsToPlaylist() {
       method: "POST",
       body: JSON.stringify({ "uris": songUris, "position": 0})
     })
+
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
@@ -132,15 +137,18 @@ async function addSongsToPlaylist() {
   catch (error) {
     console.error(error);
   }
-}
+};
 
 /* Instructions
   1. npm start
   2. update API_TOKEN variable in .env
 
   Next Steps
-  1. get more than 50 liked songs using dynamic offset to loop getLikedSongs()
-  2. parse [added_at] keys in songUrisByTime
-    a. configure filter logic
-    b. add songs to playlist
-    c. update playlist name*/
+  1. add addSongsToPlaylist() loop to add >100 songs
+  2. Parse [added_at] keys in songUrisByTime
+    i. Use Case 1: filter songs based on [added_at] year 
+      a. add filtered songs to playlist
+      b. update playlist name
+  3. Add login UI, auto refresh access token
+  4. Fix await hell
+  5. Add more filter options*/

@@ -10,9 +10,9 @@ Note: Sortify uses Bearer Token Authorization and will require a [Spotify Develo
 __The latest version only supports creating a new playlist and populating it with the current user's 50 last liked songs.__
 
 ## Features
-- View the last 50 tracks in Liked Songs
+- View the last 100 tracks in Liked Songs
 - Create a new playlist
-- Add songs to a playlist
+- Add 100 songs to a playlist
 
 ## Tech
 Sortify uses a number of open source projects to work properly:
