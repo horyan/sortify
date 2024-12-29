@@ -3,20 +3,22 @@
 
 Sortify is a Node.js application that runs entirely in the browser.
 
->I use Spotify a lot and my playlists are a mess. With nearly 3,000 uncategorized tracks in my Liked Songs playlist, I built this application to utilize all the effort I've already put into liking songs.
+>I use Spotify a lot and my playlists are a mess. With nearly 3,000 uncategorized tracks in my Liked Songs playlist, I built this application to utilize the effort I've already put into liking songs.
 
-Note: Sortify uses Bearer Token Authorization and will require a [Spotify Developer account](https://developer.spotify.com/) to provide the necessary token. Requested scopes:
+Note: Sortify uses Bearer Token Authorization and will require a [Spotify Developer account](https://developer.spotify.com/) to create an app and request a token with the following [scopes](https://developer.spotify.com/documentation/web-api/concepts/scopes):
 ```sh
-playlist-read-private playlist-modify-private playlist-modify-public user-library-modify user-library-read
+playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-library-modify user-library-read
 ```
 
-Problem: Spotify API allows querying a maximum of 50 songs and adding a maximum of 100 songs in a single request.
+Problem: Spotify Web API allows querying a maximum of 50 songs and adding a maximum of 100 songs in each single request.
 __Solution: The latest version of Sortify supports creating new playlists, querying ALL songs from Liked Songs, and adding ALL Liked Songs to a new playlist.__
 
 ## Features
 - Create new playlists
-- Query ALL saved tracks
-- Add ALL items from an existing playlist to a new playlist
+- Query all saved tracks
+- Add all saved tracks a new playlist
+- Coming Soon: Ability to filter saved tracks and add to playlist
+- Coming Soon: Login UI
 
 ## Tech
 Sortify uses a number of open source projects to work properly:
